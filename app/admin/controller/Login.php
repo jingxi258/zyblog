@@ -55,11 +55,7 @@ class Login extends BaseController
             $result['errmsg'] = '账号不存在';
             return json($result);
         }
-/*        if(!password_verify($password,$admin["password"])){
-            throw new \Exception("密码错误");
-        }*/
-        if($password != $admin["password"]){
-            //throw new \Exception("密码错误");
+        if($admin["password"] !== AdminPassword($password)){
             $result['errmsg'] = '密码错误';
             return json($result);
         }
