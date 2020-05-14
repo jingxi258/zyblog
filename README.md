@@ -3,21 +3,6 @@ ThinkPHP 6.0
 
 > 运行环境要求PHP7.1+。
 
-## 主要新特性
-
-* 采用`PHP7`强类型（严格模式）
-* 支持更多的`PSR`规范
-* 原生多应用支持
-* 更强大和易用的查询
-* 全新的事件系统
-* 模型事件和数据库事件统一纳入事件系统
-* 模板引擎分离出核心
-* 内部功能中间件化
-* SESSION/Cookie机制改进
-* 对Swoole以及协程支持改进
-* 对IDE更加友好
-* 统一和精简大量用法
-
 ## 安装
 
 ~~~
@@ -29,24 +14,53 @@ composer create-project topthink/think tp 6.0.*
 composer update topthink/framework
 ~~~
 
-## 文档
+安装多应用模式 
+~~~
+composer require topthink/think-multi-app
+~~~
 
-[完全开发手册](https://www.kancloud.cn/manual/thinkphp6_0/content)
+创建admin和index应用
+~~~
+php think build admin
+~~~
+~~~
+php think build index
+~~~
 
-## 参与开发
+后台使用X-admin
 
-请参阅 [ThinkPHP 核心框架包](https://github.com/top-think/framework)。
+安装视图模板 
+~~~
+composer require topthink/think-view
+~~~
 
-## 版权信息
+配置视图替换 项目config文件夹view.php文件
+~~~
+    'tpl_replace_string'=>[
+        '__PUBLIC__' => '/',
+        '__STATIC__' => '/static'
+    ]
+~~~
 
-ThinkPHP遵循Apache2开源协议发布，并提供免费使用。
+### 安装验证码扩展包 
+~~~
+composer require topthink/think-captcha
+~~~
 
-本项目包含的第三方源码和二进制文件之版权信息另行标注。
+使用方式
+~~~
+    public function Verify()
+    {
+        return captcha();
+    }
+~~~
+~~~
+<img src="{:url('admin/Login/Verify')}" onClick="this.src=this.src+'?'+Math.random()">
+~~~
 
-版权所有Copyright © 2006-2020 by ThinkPHP (http://thinkphp.cn)
-
-All rights reserved。
-
-ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
-
-更多细节参阅 [LICENSE.txt](LICENSE.txt)
+### 创建admin应用的中间件，项目admin应用使用应用中间件实现登录和权限验证
+~~~
+php think make:middleware admin\middleware\Check 
+~~~
+创建的文件位置为admin\middleware\Check 
+坑：命令行创建的middleware命名空间不对
